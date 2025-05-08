@@ -1,6 +1,6 @@
-require('dotenv').config();
+require('dotenv').config(); // Loads environment variables from .env
 
-console.log("Mongo URI:", process.env.MONGODB_URI); // Check if MONGODB_URI is loaded correctly
+console.log("Mongo URI:", process.env.MONGODB_URI); // Debugging check for the Mongo URI
 
 const mongoose = require('mongoose');
 

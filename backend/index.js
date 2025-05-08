@@ -68,12 +68,12 @@ app.post('/login', async (req, res) => {
 // === Get All Products ===
 app.get('/products', async (req, res) => {
   try {
-    // Product database se saare products fetch kar rahe hain
     const products = await Product.find();
-    res.json(products); // Products ko response ke roop mein bhej rahe hain
+    console.log("Fetched products:", products); // <-- add this
+    res.json(products);
   } catch (error) {
-    console.error("Fetch Products Error:", error); // Error handle kar rahe hain
-    res.status(500).send("Server error"); // Agar error aaye toh server error bhej rahe hain
+    console.error("Fetch Products Error:", error);
+    res.status(500).send("Server error");
   }
 });
 

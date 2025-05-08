@@ -9,7 +9,7 @@ const Products = () => {
       try {
         const response = await fetch('https://e-comm-backend-y3z6.onrender.com/products');
         const data = await response.json();
-        console.log("Fetched products:", data);  // Check if products are being fetched
+        console.log("Fetched products:", data);  // Log the fetched data
         setProducts(data);  // Update state with fetched data
         setLoading(false);
       } catch (error) {
@@ -20,7 +20,6 @@ const Products = () => {
 
     fetchProducts();
   }, []);
-
   
 
   // Function to handle adding a product to the cart
@@ -52,40 +51,41 @@ const Products = () => {
     alert('Product added to cart!'); // Show success message
   };
 
-    // Show loading message until data is fetched
-    if (loading) {
-      return <p className="text-center">Loading products...</p>;
-    }
-  
-    // Render products when data is available
-    return (
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Products</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.length > 0 ? (
-            products.map((product) => (
-              <div key={product._id} className="border rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-300 bg-white">
-                <div className="overflow-hidden rounded-lg mb-4">
-                  <img
-                    src={`https://e-comm-backend-y3z6.onrender.com${product.image}`}
-                    alt={product.name}
-                    className="w-full h-64 object-cover rounded-md mb-4"
-                  />
-                </div>
-                <h2 className="text-lg font-semibold">{product.name}</h2>
-                <p className="text-sm text-gray-600 mb-2">{product.description}</p>
-                <p className="text-blue-600 font-medium">₹{product.price}</p>
-                <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                  Add to Cart
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="text-center">No products available.</p>
-          )}
-        </div>
+     // Show loading message until data is fetched
+  if (loading) {
+    return <p className="text-center">Loading products...</p>;
+  }
+
+  // If no products available, display a message
+  if (products.length === 0) {
+    return <p className="text-center">No products available.</p>;
+  }
+
+  // Render products when data is available
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Products</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <div key={product._id} className="border rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-300 bg-white">
+            <div className="overflow-hidden rounded-lg mb-4">
+              <img
+                src={`https://e-comm-backend-y3z6.onrender.com${product.image}`}
+                alt={product.name}
+                className="w-full h-64 object-cover rounded-md mb-4"
+              />
+            </div>
+            <h2 className="text-lg font-semibold">{product.name}</h2>
+            <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+            <p className="text-blue-600 font-medium">₹{product.price}</p>
+            <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+              Add to Cart
+            </button>
+          </div>
+        ))}
       </div>
-    );
-  };
-  
-  export default Products;
+    </div>
+  );
+};
+
+export default Products;

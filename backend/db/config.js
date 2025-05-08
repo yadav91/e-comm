@@ -1,15 +1,20 @@
-// Mongoose ko import kar rahe hain
+require('dotenv').config();
+
+console.log("Mongo URI:", process.env.MONGODB_URI); // Check if MONGODB_URI is loaded correctly
+
 const mongoose = require('mongoose');
 
-// MongoDB se connection establish kar rahe hain
-mongoose.connect('mongodb://localhost:27017/ecomm', {
-  useNewUrlParser: true, // URL parser ko naya version use karne ke liye
-  useUnifiedTopology: true, // Unified topology ka use kar rahe hain jisse connection management better ho
-});
+// Use the correct environment variable name here
+const mongoURI = process.env.MONGODB_URI;
 
-// Optional: Jab connection successful ho jata hai tab log karne ke liye
-mongoose.connection.once('open', () => {
-  
-// MongoDB ke successful connection ka message log kar rahe hain
-  console.log("MongoDB connected successfully!"); 
-});
+if (!mongoURI) {
+  console.error('❌ MONGODB_URI is not defined in the .env file!');
+  process.exit(1); // Exit the app if MONGODB_URI is not available
+}
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB Atlas connected successfully!"))
+.catch(err => console.error("❌ MongoDB connection error:", err));

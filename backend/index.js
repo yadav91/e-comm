@@ -15,8 +15,12 @@ const sendOrderConfirmationEmail = require('./db/emailService');
 const app = express();
 
 // Middleware setup
-app.use(express.json()); // JSON request body ko parse karne ke liye
-app.use(cors()); // Cross-Origin Resource Sharing (CORS) enable kar rahe hain
+app.use(express.json());
+app.use(cors({
+  origin: "https://e-comm-dusky-iota.vercel.app", // Allow Vercel frontend
+  credentials: true
+}));
+
 app.use('/images', express.static(path.join(__dirname, 'images'))); // Static image files serve kar rahe hain
 
 // === User Registration ===
@@ -173,6 +177,7 @@ app.post('/orders', async (req, res) => {
 });
 
 // === Start Server ===
-app.listen(5000, () => {
-  console.log("✅ Server running at http://localhost:5000"); // Server ko start kar rahe hain
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });

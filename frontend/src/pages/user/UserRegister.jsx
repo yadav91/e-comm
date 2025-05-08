@@ -28,7 +28,7 @@ const UserRegister = () => {
 
     try {
       // Server par registration request bhej rahe hain
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('https://e-comm-backend-y3z6.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }), // User ka data JSON mein bhej rahe hain
@@ -59,7 +59,7 @@ const UserRegister = () => {
       };
   
       // Google user data ko server par register karne ke liye bhej rahe hain
-      const res = await fetch('http://localhost:5000/register', {
+      const res = await fetch('https://e-comm-backend-y3z6.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(googleUser), // Google user ka data JSON format mein bhej rahe hain

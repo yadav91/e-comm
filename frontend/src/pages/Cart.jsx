@@ -58,7 +58,7 @@ const Cart = () => {
             {cartItems.map((item, index) => {
               const imageUrl = item.image.startsWith("http")
                 ? item.image
-                : `http://localhost:5000/images/${item.image.replace(
+                : `https://e-comm-backend-y3z6.onrender.com/images/${item.image.replace(
                     /^\/images\//,
                     ""
                   )}`;

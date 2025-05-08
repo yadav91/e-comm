@@ -1,58 +1,58 @@
-// React aur hooks import kar rahe hain
 import React, { useState, useEffect } from 'react';
 
 const Products = () => {
-  // Products aur loading ke liye state banayi
+  // State for products and loading state
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Component load hone par products fetch karo
+  // Fetch products when the component loads
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/products'); // API se data le rahe hain
+        const response = await fetch('https://e-comm-backend-y3z6.onrender.com/products');
         const data = await response.json();
-        setProducts(data); // Products ko state mein set kar rahe hain
-        setLoading(false); // Loading false kar rahe hain
+        console.log(data);  // Log the fetched data
+        setProducts(data);  // Update state with fetched products
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching products:', error); // Agar error aaye to console mein dikhao
-        setLoading(false); // Loading false kar rahe hain
+        console.error('Error fetching products:', error);
+        setLoading(false);
       }
     };
 
-    fetchProducts(); // Function call
+    fetchProducts();
   }, []);
 
-  // Cart mein product add karne ka function
+  // Function to handle adding a product to the cart
   const handleAddToCart = (product) => {
-    const user = JSON.parse(localStorage.getItem('user')); // User check kar rahe hain
+    const user = JSON.parse(localStorage.getItem('user')); // Check if user is logged in
     if (!user) {
-      alert('Please login to add items to the cart.'); // Agar login nahi kiya to alert
+      alert('Please login to add items to the cart.'); // Alert if user is not logged in
       return;
     }
 
-    // Pehle se cart mein kya hai, usko le rahe hain
+    // Get the existing cart from localStorage
     const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // Check kar rahe hain product already cart mein hai ya nahi
+
+    // Check if the product is already in the cart
     const existingProductIndex = existingCart.findIndex(
       (item) => item._id === product._id
     );
 
     if (existingProductIndex !== -1) {
-      // Agar already hai to quantity badhao
+      // If the product is already in the cart, increase the quantity
       existingCart[existingProductIndex].quantity += 1;
     } else {
-      // Agar nahi hai to product add karo with quantity 1
+      // Otherwise, add the product to the cart with quantity 1
       existingCart.push({ ...product, quantity: 1 });
     }
 
-    // Cart ko localStorage mein save karo
+    // Save the updated cart in localStorage
     localStorage.setItem('cart', JSON.stringify(existingCart));
-    alert('Product added to cart!'); // Success message
+    alert('Product added to cart!'); // Show success message
   };
 
-  // Jab tak data load ho raha hai, loading message dikhao
+  // Display loading message while fetching data
   if (loading) {
     return <p className="text-center">Loading products...</p>;
   }
@@ -64,19 +64,19 @@ const Products = () => {
         Products
       </h1>
 
-      {/* Products list grid mein dikhana */}
+      {/* Products list displayed in a grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <div
-            key={product._id} // Har product ke liye unique key
+            key={product._id}
             className="border rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-300 bg-white"
           >
-            {/* Product image */}
             <div className="overflow-hidden rounded-lg mb-4">
+              {/* Displaying product image */}
               <img
-                src={`http://localhost:5000${product.image}`} // Image ka path
+                src={`https://e-comm-backend-y3z6.onrender.com/${product.image}`}
                 alt={product.name}
-                className="w-full h-64 object-cover transform hover:scale-105 transition duration-300"
+                className="w-full h-64 object-cover rounded-md mb-4"
               />
             </div>
 
@@ -85,7 +85,7 @@ const Products = () => {
             <p className="text-sm text-gray-600 mb-2">{product.description}</p>
             <p className="text-blue-600 font-medium">₹{product.price}</p>
 
-            {/* Add to Cart button */}
+            {/* Add to cart button */}
             <button
               onClick={() => handleAddToCart(product)}
               className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"

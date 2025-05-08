@@ -77,7 +77,7 @@ const Checkout = () => {
     // 🧾 Cash on Delivery
     if (form.paymentMethod === "cod") {
       try {
-        const res = await fetch("http://localhost:5000/orders", {
+        const res = await fetch("https://e-comm-backend-y3z6.onrender.com/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(orderData),
@@ -97,7 +97,7 @@ const Checkout = () => {
     if (form.paymentMethod === "razorpay") {
       try {
         // 🔧 Backend se order create karna
-        const razorRes = await fetch("http://localhost:5000/create-order", {
+        const razorRes = await fetch("https://e-comm-backend-y3z6.onrender.com/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ amount: totalAmount }),
@@ -117,7 +117,7 @@ const Checkout = () => {
           handler: async function (response) {
             // ✅ Payment success hone ke baad order save karna
             try {
-              const orderRes = await fetch("http://localhost:5000/orders", {
+              const orderRes = await fetch("https://e-comm-backend-y3z6.onrender.com/orders", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

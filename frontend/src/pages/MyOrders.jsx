@@ -10,7 +10,7 @@ const MyOrders = () => {
     if (!user) return; // agar user nahi mila to kuch mat karo
 
     try {
-      const res = await fetch(`http://localhost:5000/orders/${user.email}`); // backend se orders la rahe hain
+      const res = await fetch(`https://e-comm-backend-y3z6.onrender.com/orders/${user.email}`); // backend se orders la rahe hain
       const data = await res.json();
 
       if (res.ok) {
@@ -34,7 +34,7 @@ const MyOrders = () => {
     if (!confirm) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/orders/${orderId}`, {
+      const res = await fetch(`https://e-comm-backend-y3z6.onrender.com/orders/${orderId}`, {
         method: "DELETE", // order delete karne ke liye DELETE request
       });
 
@@ -107,8 +107,8 @@ const MyOrders = () => {
                   <div key={idx} className="flex items-center border-b pb-2 gap-4">
                     <img
                       src={product.image.startsWith('/images/') 
-                        ? `http://localhost:5000${product.image}` 
-                        : `http://localhost:5000/images/${product.image}`} // Image path
+                        ? `https://e-comm-backend-y3z6.onrender.com${product.image}` 
+                        : `https://e-comm-backend-y3z6.onrender.com/images/${product.image}`} // Image path
                       alt={product.name}
                       className="w-20 h-20 object-cover rounded"
                     />

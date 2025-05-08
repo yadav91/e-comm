@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // React aur useState hook import kar rahe hain
 import { useNavigate, Link } from 'react-router-dom'; // useNavigate hook navigation ke liye aur Link component routing ke liye
 import { GoogleLogin } from '@react-oauth/google'; // Google Login component import kar rahe hain
-import jwtDecode  from 'jwt-decode';  // ✅ JWT token ko decode karne ke liye jwt-decode import kar rahe hain
+import jwtDecode from 'jwt-decode';  // ✅ JWT token ko decode karne ke liye jwt-decode import kar rahe hain
 
 const UserLogin = () => {
   const [email, setEmail] = useState(''); // email ki state banayi hai jo initially empty hai
@@ -13,7 +13,7 @@ const UserLogin = () => {
     if (email && password) { // Check karte hain ki email aur password diye gaye hain
       try {
         // Fetch request send kar rahe hain server ko login ke liye
-        const response = await fetch('http://localhost:5000/login', {
+        const response = await fetch('https://e-comm-backend-y3z6.onrender.com/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }), // Email aur password ko JSON format mein send kar rahe hain
@@ -47,7 +47,7 @@ const UserLogin = () => {
       };
 
       // Google user data ko server par login karne ke liye bhej rahe hain
-      const res = await fetch('http://localhost:5000/login', {
+      const res = await fetch('https://e-comm-backend-y3z6.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(googleUser), // Google user ka data JSON format mein bhej rahe hain
@@ -103,6 +103,14 @@ const UserLogin = () => {
 
         {/* OR separator */}
         <div className="my-4 text-center text-gray-500">OR</div>
+
+        {/* Google Login button */}
+        <div className="flex justify-center mb-4">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+          />
+        </div>
 
         {/* Link to register page */}
         <p className="mt-4 text-center text-sm text-gray-600">

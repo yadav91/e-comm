@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // React aur useState hook import kar rahe hain
 import { useNavigate, Link } from 'react-router-dom'; // useNavigate hook navigation ke liye aur Link component routing ke liye
 import { GoogleLogin } from '@react-oauth/google'; // Google Login component import kar rahe hain
-import { jwtDecode } from 'jwt-decode';  // ✅ JWT token ko decode karne ke liye jwt-decode import kar rahe hain
+import jwtDecode  from 'jwt-decode';  // ✅ JWT token ko decode karne ke liye jwt-decode import kar rahe hain
 
 const UserLogin = () => {
   const [email, setEmail] = useState(''); // email ki state banayi hai jo initially empty hai

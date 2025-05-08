@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 // Import Google Login components
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
+import  jwtDecode  from 'jwt-decode';
 
 // Navigation bar component
 const Nav = () => {

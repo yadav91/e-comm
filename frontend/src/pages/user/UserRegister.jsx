@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // React aur useState hook ko import kar rahe hain
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate hook aur Link component ko import kar rahe hain
 import { GoogleLogin } from '@react-oauth/google'; // GoogleLogin component ko import kar rahe hain
-import { jwtDecode } from 'jwt-decode';  // ✅ JWT token ko decode karne ke liye jwt-decode import kar rahe hain
+import  jwtDecode  from 'jwt-decode';  // ✅ JWT token ko decode karne ke liye jwt-decode import kar rahe hain
 
 const UserRegister = () => {
   // State variables define kar rahe hain

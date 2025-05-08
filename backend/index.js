@@ -21,7 +21,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.use('/images', express.static(path.join(__dirname, 'public/images'))); // Static image files serve kar rahe hain
+app.use('/images', express.static(path.join(__dirname, 'images'))); // Static image files serve kar rahe hain
 
 // === User Registration ===
 app.post('/register', async (req, res) => {

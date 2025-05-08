@@ -21,7 +21,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.use('/images', express.static(path.join(__dirname, 'images'))); // Static image files serve kar rahe hain
+app.use('/images', express.static(path.join(__dirname, 'public/images'))); // Static image files serve kar rahe hain
 
 // === User Registration ===
 app.post('/register', async (req, res) => {
@@ -65,17 +65,20 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
 // === Get All Products ===
 app.get('/products', async (req, res) => {
   try {
     const products = await Product.find();
-    console.log("Fetched products:", products); // <-- add this
+    console.log("Fetched products:", products);  // Log the products
     res.json(products);
   } catch (error) {
     console.error("Fetch Products Error:", error);
     res.status(500).send("Server error");
   }
 });
+
+
 
 // === Get Orders by User Email ===
 app.get('/orders/:userEmail', async (req, res) => {

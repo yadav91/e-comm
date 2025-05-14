@@ -9,59 +9,48 @@ const Products = () => {
       try {
         const response = await fetch('https://e-comm-backend-y3z6.onrender.com/products');
         const data = await response.json();
-        console.log("Fetched products:", data);  // Log the fetched data
-        setProducts(data);  // Update state with fetched data
+        console.log("Fetched products:", data);
+        setProducts(data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching products:', error);  // Log any fetch errors
+        console.error('Error fetching products:', error);
         setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
-  
 
-  // Function to handle adding a product to the cart
   const handleAddToCart = (product) => {
-    const user = JSON.parse(localStorage.getItem('user')); // Check if user is logged in
+    const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
-      alert('Please login to add items to the cart.'); // Alert if user is not logged in
+      alert('Please login to add items to the cart.');
       return;
     }
 
-    // Get the existing cart from localStorage
     const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Check if the product is already in the cart
     const existingProductIndex = existingCart.findIndex(
       (item) => item._id === product._id
     );
 
     if (existingProductIndex !== -1) {
-      // If the product is already in the cart, increase the quantity
       existingCart[existingProductIndex].quantity += 1;
     } else {
-      // Otherwise, add the product to the cart with quantity 1
       existingCart.push({ ...product, quantity: 1 });
     }
 
-    // Save the updated cart in localStorage
     localStorage.setItem('cart', JSON.stringify(existingCart));
-    alert('Product added to cart!'); // Show success message
+    alert('Product added to cart!');
   };
 
-     // Show loading message until data is fetched
   if (loading) {
     return <p className="text-center">Loading products...</p>;
   }
 
-  // If no products available, display a message
   if (products.length === 0) {
     return <p className="text-center">No products available.</p>;
   }
 
-  // Render products when data is available
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Products</h1>
@@ -78,7 +67,10 @@ const Products = () => {
             <h2 className="text-lg font-semibold">{product.name}</h2>
             <p className="text-sm text-gray-600 mb-2">{product.description}</p>
             <p className="text-blue-600 font-medium">₹{product.price}</p>
-            <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            <button
+              onClick={() => handleAddToCart(product)} // ✅ Fixed: Connected function
+              className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            >
               Add to Cart
             </button>
           </div>

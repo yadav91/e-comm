@@ -17,9 +17,10 @@ const app = express();
 // Middleware setup
 app.use(express.json());
 app.use(cors({
-  origin: "https://e-comm-dusky-iota.vercel.app", // Allow Vercel frontend
+  origin: "https://e-comm-rho-sepia.vercel.app", // ✅ Updated to new Vercel frontend domain
   credentials: true
 }));
+
 
 app.use('/images', express.static(path.join(__dirname, 'images'))); // Static image files serve kar rahe hain
 

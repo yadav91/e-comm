@@ -24,11 +24,33 @@ app.use(cors({
 
 app.use('/images', express.static(path.join(__dirname, 'images'))); // Static image files serve kar rahe hain
 
-// === User Registration ===
-app.post('/login', async (req, res) => {
+// === Manual Registration ===
+app.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
 
-  console.log("Login request received:", req.body); // Debug log
+  try {
+    if (!name || !email || !password) {
+      return res.status(400).send({ message: "All fields are required" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send({ message: "User already exists" });
+    }
+
+    const newUser = new User({ name, email, password });
+    await newUser.save();
+    res.status(201).send({ message: "User registered successfully" });
+
+  } catch (err) {
+    console.error("❌ Registration Error:", err);
+    res.status(500).send({ message: "Server error during registration" });
+  }
+});
+
+// === Manual + Google Login ===
+app.post('/login', async (req, res) => {
+  const { name, email, password } = req.body;
 
   try {
     if (!email) {
@@ -44,7 +66,7 @@ app.post('/login', async (req, res) => {
         return res.status(401).send({ message: "Invalid email or password" });
       }
     } else {
-      // Google login (password not required)
+      // Google login
       let googleUser = await User.findOne({ email }).select("-password");
 
       if (!googleUser) {
@@ -61,38 +83,7 @@ app.post('/login', async (req, res) => {
 
   } catch (err) {
     console.error("❌ Login Error:", err);
-    res.status(500).send({ message: "Server error during login", error: err.message });
-  }
-});
-
-
-// === User Login (Manual + Google) ===
-app.post('/login', async (req, res) => {
-  const { name, email, password } = req.body;
-
-  console.log("Login request received:", req.body); // Debug log
-
-  try {
-    if (email && password) {
-      const user = await User.findOne({ email, password }).select("-password");
-      if (user) return res.send(user);
-      else return res.status(401).send({ message: "No user found" });
-    }
-
-    if (email && !password) {
-      let googleUser = await User.findOne({ email }).select("-password");
-      if (!googleUser) {
-        const newUser = new User({ name, email, password: null });
-        googleUser = await newUser.save();
-      }
-      return res.send(googleUser);
-    }
-
-    res.status(400).send({ message: "Invalid request" });
-
-  } catch (err) {
-    console.error("Login Error:", err); // Error log
-    res.status(500).send({ message: "Server error during login", error: err.message });
+    res.status(500).send({ message: "Server error during login" });
   }
 });
 

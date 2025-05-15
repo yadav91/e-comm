@@ -11,6 +11,17 @@ const Nav = () => {
   );
   const [menuOpen, setMenuOpen] = React.useState(false);
 
+  // Listen for manual login/logout updates
+  React.useEffect(() => {
+    const syncUser = () => {
+      const updatedUser = JSON.parse(localStorage.getItem("user"));
+      setUser(updatedUser);
+    };
+
+    window.addEventListener("userChanged", syncUser);
+    return () => window.removeEventListener("userChanged", syncUser);
+  }, []);
+
   const handleLoginSuccess = (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
     const userData = {
@@ -19,12 +30,14 @@ const Nav = () => {
       picture: decoded.picture,
     };
     localStorage.setItem("user", JSON.stringify(userData));
+    window.dispatchEvent(new Event("userChanged")); // Trigger update
     setUser(userData);
     navigate("/");
   };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    window.dispatchEvent(new Event("userChanged")); // Trigger update
     setUser(null);
     navigate("/login");
   };
@@ -67,11 +80,13 @@ const Nav = () => {
         <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:items-center gap-3">
           {user ? (
             <div className="flex items-center gap-2">
-              <img
-                src={user.picture}
-                alt={user.name}
-                className="w-8 h-8 rounded-full border"
-              />
+              {user.picture && (
+                <img
+                  src={user.picture}
+                  alt={user.name}
+                  className="w-8 h-8 rounded-full border"
+                />
+              )}
               <span className="text-sm font-medium">{user.name}</span>
               <button
                 onClick={handleLogout}
@@ -84,7 +99,7 @@ const Nav = () => {
             <>
               <GoogleLogin
                 onSuccess={handleLoginSuccess}
-                onError={() => console.log("Login Failed")}
+                onError={() => console.log("Google Login Failed")}
                 shape="pill"
                 theme="filled_blue"
                 size="medium"

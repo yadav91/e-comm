@@ -19,6 +19,7 @@ const UserLogin = () => {
 
         if (result.name) {
           localStorage.setItem('user', JSON.stringify(result));
+          window.dispatchEvent(new Event("userChanged")); // 🔥 Notify Nav.jsx
           navigate('/');
         } else {
           alert('Invalid login credentials');

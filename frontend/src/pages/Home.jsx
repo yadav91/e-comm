@@ -24,9 +24,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4 sm:px-6 lg:px-20">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center px-4 sm:px-6 lg:px-20 py-10">
       {/* Heading */}
-      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center text-blue-600 mb-6">
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center text-blue-600 mb-6 leading-tight">
         Welcome to Our E-commerce Store
       </h1>
 
@@ -57,9 +57,11 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      <div className="bg-white shadow-xl rounded-xl p-6 sm:p-8 w-full max-w-3xl mb-10 text-center">
-        <h2 className="text-xl sm:text-2xl font-semibold text-blue-500 mb-4">Why Shop With Us?</h2>
-        <ul className="space-y-3 text-gray-700 text-base text-left sm:text-center">
+      <div className="bg-white shadow-xl rounded-xl px-6 py-8 w-full max-w-3xl mb-10">
+        <h2 className="text-xl sm:text-2xl font-semibold text-blue-500 mb-4 text-center">
+          Why Shop With Us?
+        </h2>
+        <ul className="space-y-3 text-gray-700 text-base sm:text-lg">
           <li>✨ Free Shipping on all orders above $50</li>
           <li>🔄 Easy Returns and Exchanges</li>
           <li>📞 24/7 Customer Support</li>

@@ -11,7 +11,6 @@ const Nav = () => {
   );
   const [menuOpen, setMenuOpen] = React.useState(false);
 
-  // Listen for manual login/logout updates
   React.useEffect(() => {
     const syncUser = () => {
       const updatedUser = JSON.parse(localStorage.getItem("user"));
@@ -30,14 +29,14 @@ const Nav = () => {
       picture: decoded.picture,
     };
     localStorage.setItem("user", JSON.stringify(userData));
-    window.dispatchEvent(new Event("userChanged")); // Trigger update
+    window.dispatchEvent(new Event("userChanged"));
     setUser(userData);
     navigate("/");
   };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    window.dispatchEvent(new Event("userChanged")); // Trigger update
+    window.dispatchEvent(new Event("userChanged"));
     setUser(null);
     navigate("/login");
   };
@@ -45,10 +44,7 @@ const Nav = () => {
   return (
     <nav className="bg-white shadow-md px-4 py-3 sm:px-6 md:px-10">
       <div className="flex justify-between items-center">
-        {/* Logo */}
         <div className="text-xl sm:text-2xl font-bold text-blue-600">MyStore</div>
-
-        {/* Hamburger */}
         <button
           className="sm:hidden text-gray-700"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -57,7 +53,6 @@ const Nav = () => {
         </button>
       </div>
 
-      {/* Links */}
       <div
         className={`${
           menuOpen ? "block" : "hidden"
@@ -76,7 +71,6 @@ const Nav = () => {
           )}
         </div>
 
-        {/* Auth Section */}
         <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:items-center gap-3">
           {user ? (
             <div className="flex items-center gap-2">

@@ -7,29 +7,36 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (email && password) {
-      try {
-        const response = await fetch('https://e-comm-backend-y3z6.onrender.com/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const result = await response.json();
-
-        if (result.name) {
-          localStorage.setItem('user', JSON.stringify(result));
-          window.dispatchEvent(new Event("userChanged")); // 🔥 Notify Nav.jsx
-          navigate('/');
-        } else {
-          alert('Invalid login credentials');
-        }
-      } catch (error) {
-        console.error('Login error:', error);
-        alert('Login failed. Try again.');
-      }
-    } else {
+    if (!email || !password) {
       alert('Please fill all fields');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://e-comm-backend-y3z6.onrender.com/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const result = await response.json();
+
+      if (result.name) {
+        const userData = {
+          name: result.name,
+          email: result.email,
+          picture: result.picture || "", // Optional picture
+        };
+
+        localStorage.setItem('user', JSON.stringify(userData));
+        window.dispatchEvent(new Event("userChanged")); // Notify Nav
+        navigate('/');
+      } else {
+        alert('Invalid login credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Try again.');
     }
   };
 

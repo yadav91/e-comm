@@ -2,14 +2,14 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
-import { Menu, X } from "lucide-react"; // Optional: For hamburger icon
+import { Menu, X } from "lucide-react";
 
 const Nav = () => {
   const navigate = useNavigate();
   const [user, setUser] = React.useState(
     JSON.parse(localStorage.getItem("user")) || null
   );
-  const [menuOpen, setMenuOpen] = React.useState(false); // For mobile toggle
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const handleLoginSuccess = (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
@@ -30,35 +30,39 @@ const Nav = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md px-4 py-3 sm:px-6 md:px-10 flex justify-between items-center relative z-50">
-      {/* Logo */}
-      <div className="text-xl sm:text-2xl font-bold text-blue-600">MyStore</div>
+    <nav className="bg-white shadow-md px-4 py-3 sm:px-6 md:px-10">
+      <div className="flex justify-between items-center">
+        <div className="text-xl sm:text-2xl font-bold text-blue-600">MyStore</div>
 
-      {/* Hamburger for mobile */}
-      <button
-        className="sm:hidden text-gray-700 focus:outline-none"
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        {menuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+        <button
+          className="sm:hidden text-gray-700"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
-      {/* Navigation Links (Responsive) */}
       <div
         className={`${
           menuOpen ? "block" : "hidden"
-        } sm:flex flex-col sm:flex-row sm:items-center sm:space-x-6 absolute sm:static bg-white top-full left-0 w-full sm:w-auto shadow-md sm:shadow-none p-4 sm:p-0 transition-all`}
+        } sm:flex sm:items-center sm:justify-between sm:space-x-6 mt-4 sm:mt-2 transition-all`}
       >
-        <Link to="/" className="text-gray-700 hover:text-blue-600 mb-2 sm:mb-0">Home</Link>
-        <Link to="/about" className="text-gray-700 hover:text-blue-600 mb-2 sm:mb-0">About</Link>
-        <Link to="/contact" className="text-gray-700 hover:text-blue-600 mb-2 sm:mb-0">Contact</Link>
-        <Link to="/products" className="text-gray-700 hover:text-blue-600 mb-2 sm:mb-0">Products</Link>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0">
+          <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
+          <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
+          <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
+          <Link to="/products" className="text-gray-700 hover:text-blue-600">Products</Link>
+          {user && (
+            <>
+              <Link to="/cart" className="text-gray-700 hover:text-blue-600">Cart</Link>
+              <Link to="/orders" className="text-gray-700 hover:text-blue-600">My Orders</Link>
+            </>
+          )}
+        </div>
 
-        {user ? (
-          <>
-            <Link to="/cart" className="text-gray-700 hover:text-blue-600 mb-2 sm:mb-0">Cart</Link>
-            <Link to="/orders" className="text-gray-700 hover:text-blue-600 mb-2 sm:mb-0">My Orders</Link>
-
-            <div className="flex items-center gap-2 mt-2 sm:mt-0">
+        <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:items-center gap-3">
+          {user ? (
+            <div className="flex items-center gap-2">
               <img
                 src={user.picture}
                 alt={user.name}
@@ -72,20 +76,25 @@ const Nav = () => {
                 Logout
               </button>
             </div>
-          </>
-        ) : (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-2 sm:mt-0">
-            <GoogleLogin
-              onSuccess={handleLoginSuccess}
-              onError={() => console.log("Login Failed")}
-              shape="pill"
-              theme="filled_blue"
-              size="medium"
-              text="signin_with"
-            />
-            <Link to="/register" className="text-gray-700 hover:text-blue-600 text-sm">Register</Link>
-          </div>
-        )}
+          ) : (
+            <>
+              <GoogleLogin
+                onSuccess={handleLoginSuccess}
+                onError={() => console.log("Login Failed")}
+                shape="pill"
+                theme="filled_blue"
+                size="medium"
+                text="signin_with"
+              />
+              <Link
+                to="/register"
+                className="text-gray-700 hover:text-blue-600 text-sm"
+              >
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

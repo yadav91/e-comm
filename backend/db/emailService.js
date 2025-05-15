@@ -59,4 +59,36 @@ E-comm (Dmart)`,  // Updated footer with company name "E-comm" and company email
   });
 };
 
+// === Contact Form Email Route ===
+app.post('/send-contact-email', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  const mailOptions = {
+    from: 'DmartOrder@gmail.com',
+    to: email,
+    subject: 'Thanks for contacting us!',
+    text: `Hi ${name},
+
+We’ve received your message:
+"${message}"
+
+Our support team will get back to you shortly.
+
+- Team E-comm`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: 'Email sent successfully!' });
+  } catch (error) {
+    console.error('Error sending contact email:', error);
+    res.status(500).json({ message: 'Failed to send email' });
+  }
+});
+
+
 module.exports = sendOrderConfirmationEmail;

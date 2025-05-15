@@ -13,11 +13,30 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmittedData(formData);
-    setSuccess(true);
-    setFormData({ name: '', email: '', message: '' });
+
+    try {
+      const res = await fetch('https://e-comm-backend-y3z6.onrender.com/send-contact-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess(true);
+        setSubmittedData(formData);
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        alert(data.message || 'Failed to send message.');
+      }
+    } catch (error) {
+      alert('Something went wrong!');
+      console.error(error);
+    }
   };
 
   return (

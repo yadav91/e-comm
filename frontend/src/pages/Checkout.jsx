@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  // 🧾 Form ke liye state
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
@@ -15,13 +14,13 @@ const Checkout = () => {
 
   const navigate = useNavigate();
 
-  // 🔐 Agar user login nahi hai to login page par bhejna
+  // 🔐 Redirect if user not logged in
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) navigate("/login");
   }, [navigate]);
 
-  // 💳 Razorpay ka script load karna
+  // 💳 Load Razorpay script
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -32,9 +31,7 @@ const Checkout = () => {
     };
   }, []);
 
-  // ✅ Order place karne wala function
   const handlePlaceOrder = async () => {
-    // 🔍 Sare fields fill kiye gaye hain ya nahi
     if (
       !form.fullName ||
       !form.street ||
@@ -50,17 +47,14 @@ const Checkout = () => {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const products = JSON.parse(localStorage.getItem("cart")) || [];
-
     if (!user) return navigate("/login");
     if (products.length === 0) return alert("Your cart is empty.");
 
-    // 💰 Total amount calculate karna
     const totalAmount = products.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
 
-    // 📦 Order ka data
     const orderData = {
       user: { name: user.name, email: user.email },
       address: form,
@@ -74,7 +68,7 @@ const Checkout = () => {
       paymentMethod: form.paymentMethod,
     };
 
-    // 🧾 Cash on Delivery
+    // ✅ Cash on Delivery
     if (form.paymentMethod === "cod") {
       try {
         const res = await fetch("https://e-comm-backend-y3z6.onrender.com/orders", {
@@ -93,10 +87,9 @@ const Checkout = () => {
       }
     }
 
-    // 💳 Razorpay Payment
+    // ✅ Razorpay Payment
     if (form.paymentMethod === "razorpay") {
       try {
-        // 🔧 Backend se order create karna
         const razorRes = await fetch("https://e-comm-backend-y3z6.onrender.com/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -106,7 +99,6 @@ const Checkout = () => {
         const razorData = await razorRes.json();
         if (!razorData.order) throw new Error("Failed to create Razorpay order");
 
-        // 🔑 Razorpay options set karna
         const options = {
           key: "rzp_test_mH1BweJ0lhBp1g",
           amount: razorData.order.amount,
@@ -115,7 +107,6 @@ const Checkout = () => {
           description: "Order Payment",
           order_id: razorData.order.id,
           handler: async function (response) {
-            // ✅ Payment success hone ke baad order save karna
             try {
               const orderRes = await fetch("https://e-comm-backend-y3z6.onrender.com/orders", {
                 method: "POST",
@@ -146,11 +137,18 @@ const Checkout = () => {
             contact: form.phone,
           },
           theme: { color: "#3399cc" },
+          redirect: true, // ✅ Important for mobile
         };
 
-        // 💥 Razorpay window open karna
         const rzp = new window.Razorpay(options);
         rzp.open();
+
+        // ⛔ Error logging for mobile test failures
+        rzp.on("payment.failed", function (response) {
+          console.error("Payment Failed:", response.error);
+          alert("Payment Failed: " + response.error.description);
+        });
+
       } catch (err) {
         console.error("Error initiating Razorpay:", err);
         alert("Failed to initiate Razorpay payment.");
@@ -158,13 +156,11 @@ const Checkout = () => {
     }
   };
 
-  // 📝 Form fields update karne ka function
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🧾 Checkout Page UI
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Checkout</h2>
@@ -175,8 +171,7 @@ const Checkout = () => {
         <input type="text" name="city" value={form.city} onChange={handleChange} placeholder="City" required className="p-2 border rounded" />
         <input type="text" name="state" value={form.state} onChange={handleChange} placeholder="State" required className="p-2 border rounded" />
         <input type="text" name="postalCode" value={form.postalCode} onChange={handleChange} placeholder="Postal Code" pattern="[0-9]{6}" required className="p-2 border rounded" />
-        
-        {/* 💳 Payment Method Dropdown */}
+
         <div>
           <label className="block font-medium mb-1">Payment Method</label>
           <select name="paymentMethod" value={form.paymentMethod} onChange={handleChange} className="p-2 border rounded w-full" required>
@@ -186,7 +181,6 @@ const Checkout = () => {
           </select>
         </div>
 
-        {/* 🟢 Order Button */}
         <button type="button" onClick={handlePlaceOrder} className="bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
           Place Order
         </button>

@@ -47,39 +47,32 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log("Login request received:", req.body); // Debug log
+
   try {
     if (email && password) {
-      // Manual login: email + password
       const user = await User.findOne({ email, password }).select("-password");
-      return user
-        ? res.send(user)
-        : res.status(401).send({ message: "No user found" });
+      if (user) return res.send(user);
+      else return res.status(401).send({ message: "No user found" });
     }
 
     if (email && !password) {
-      // Google Login
       let googleUser = await User.findOne({ email }).select("-password");
-
       if (!googleUser) {
-        // Google user not found, create new one
-        const newUser = new User({
-          name: name || "Google User", // fallback if name is not provided
-          email,
-          password: null
-        });
+        const newUser = new User({ name, email, password: null });
         googleUser = await newUser.save();
       }
-
       return res.send(googleUser);
     }
 
     res.status(400).send({ message: "Invalid request" });
 
   } catch (err) {
-    console.error("Login Error:", err);
-    res.status(500).send({ message: "Server error during login" });
+    console.error("Login Error:", err); // Error log
+    res.status(500).send({ message: "Server error during login", error: err.message });
   }
 });
+
 
 
 // === Get All Products ===

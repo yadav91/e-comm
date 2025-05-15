@@ -24,17 +24,19 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center py-10 px-4 sm:px-6 lg:px-20">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4 sm:px-6 lg:px-20">
+      {/* Heading */}
       <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center text-blue-600 mb-6">
         Welcome to Our E-commerce Store
       </h1>
 
-      <p className="text-md sm:text-lg md:text-xl text-gray-700 text-center mb-8 max-w-4xl leading-relaxed px-2">
+      {/* Subtext */}
+      <p className="text-base sm:text-lg md:text-xl text-gray-700 text-center mb-8 max-w-4xl leading-relaxed">
         Discover amazing products at great prices. Shop now for the best deals! We offer the best products with exclusive offers, perfect for every occasion.
       </p>
 
-      {/* Banner slider */}
-      <div className="w-full max-w-6xl mx-auto overflow-hidden mb-10 relative rounded-xl shadow-xl">
+      {/* Banner Slider */}
+      <div className="w-full max-w-6xl overflow-hidden mb-10 relative rounded-xl shadow-xl">
         <div
           className="flex transition-transform duration-1000 ease-in-out"
           style={{ transform: `translateX(-${currentBanner * 100}%)` }}
@@ -47,7 +49,7 @@ const Home = () => {
               <img
                 src={banner}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-full object-cover rounded-xl shadow-md transition-transform duration-500 hover:scale-105"
+                className="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-105"
               />
             </div>
           ))}
@@ -55,9 +57,9 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      <div className="bg-white shadow-xl rounded-lg p-6 sm:p-8 w-full max-w-3xl mb-10 text-center">
+      <div className="bg-white shadow-xl rounded-xl p-6 sm:p-8 w-full max-w-3xl mb-10 text-center">
         <h2 className="text-xl sm:text-2xl font-semibold text-blue-500 mb-4">Why Shop With Us?</h2>
-        <ul className="list-disc list-inside space-y-2 text-gray-600 text-left sm:text-center sm:list-none sm:space-y-1">
+        <ul className="space-y-3 text-gray-700 text-base text-left sm:text-center">
           <li>✨ Free Shipping on all orders above $50</li>
           <li>🔄 Easy Returns and Exchanges</li>
           <li>📞 24/7 Customer Support</li>
@@ -66,14 +68,12 @@ const Home = () => {
       </div>
 
       {/* CTA Button */}
-      <div className="mb-4">
-        <button 
-          onClick={handleShopNow}
-          className="px-6 py-3 text-sm sm:text-base bg-blue-600 text-white font-semibold rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 hover:scale-105"
-        >
-          Shop Now
-        </button>
-      </div>
+      <button 
+        onClick={handleShopNow}
+        className="px-8 py-3 bg-blue-600 text-white text-sm sm:text-base font-semibold rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 hover:scale-105"
+      >
+        Shop Now
+      </button>
     </div>
   );
 };

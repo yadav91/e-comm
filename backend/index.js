@@ -10,6 +10,7 @@ const User = require('./db/User');
 const Product = require('./db/Product');
 const Order = require('./db/Order');
 const sendOrderConfirmationEmail = require('./db/emailService');
+const  sendContactEmail  = require('./db/sendOrderConfirmationEmail');
 
 // Express application ko initialize kar rahe hain
 const app = express();
@@ -210,22 +211,8 @@ app.post('/send-contact-email', async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
-  const mailOptions = {
-    from: 'DmartOrder@gmail.com', // 👈 Same as your transporter user
-    to: email,  // 👈 User's email who submitted the form
-    subject: 'Thanks for contacting us!',
-    text: `Hi ${name},
-
-We’ve received your message:
-"${message}"
-
-Our support team will get back to you shortly.
-
-- Team E-comm (Dmart)`,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
+    await sendContactEmail(name, email, message);
     console.log(`✅ Contact email sent to ${email}`);
     return res.status(200).json({ message: 'Email sent successfully!' });
   } catch (error) {
@@ -233,6 +220,7 @@ Our support team will get back to you shortly.
     return res.status(500).json({ message: 'Failed to send email. Please try again later.' });
   }
 });
+
 
 
 // === Start Server ===

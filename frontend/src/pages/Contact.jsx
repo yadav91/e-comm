@@ -1,69 +1,75 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 👈 import useNavigate
+import React, { useState } from 'react';
 
 const Contact = () => {
-  const navigate = useNavigate(); // 👈 initialize navigate
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [submittedData, setSubmittedData] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-  // Handle form submission
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // prevent default form behavior
-
-    // Optionally, add validation or logic here
-
-    // Redirect to 404 page
-    navigate('/404');
+    e.preventDefault();
+    setSubmittedData(formData);
+    setSuccess(true);
+    setFormData({ name: '', email: '', message: '' });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
-        Contact Us
-      </h1>
-
-      <p className="text-xl text-center text-gray-700 mb-12">
+    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-600 mb-4">Contact Us</h1>
+      <p className="text-base sm:text-lg text-center text-gray-700 mb-10">
         Koi bhi sawaal ho? Humein bina jhijhak contact karein. Hum madad ke liye yahan hain!
       </p>
 
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Get In Touch</h2>
+      <div className="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6">Get In Touch</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">
-              Full Name
-            </label>
+            <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name</label>
             <input
               type="text"
               id="name"
               name="name"
+              value={formData.name}
+              onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Apna poora naam likhein"
+              required
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
-              Email Address
-            </label>
+            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email Address</label>
             <input
               type="email"
               id="email"
               name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Apna email daalein"
+              required
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="message" className="block text-gray-700 font-semibold mb-2">
-              Message
-            </label>
+            <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Message</label>
             <textarea
               id="message"
               name="message"
+              value={formData.message}
+              onChange={handleChange}
               rows="4"
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Yahan apna message likhein"
+              required
             />
           </div>
 
@@ -74,6 +80,21 @@ const Contact = () => {
             Send Message
           </button>
         </form>
+
+        {success && (
+          <div className="mt-6 text-green-600 text-center font-semibold">
+            ✅ Thank you! Your message has been received.
+          </div>
+        )}
+
+        {submittedData && (
+          <div className="mt-6 bg-gray-100 p-4 rounded-lg text-gray-800">
+            <h3 className="text-lg font-semibold mb-2">Submitted Information:</h3>
+            <p><strong>Name:</strong> {submittedData.name}</p>
+            <p><strong>Email:</strong> {submittedData.email}</p>
+            <p><strong>Message:</strong> {submittedData.message}</p>
+          </div>
+        )}
       </div>
     </div>
   );

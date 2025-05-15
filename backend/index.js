@@ -25,23 +25,46 @@ app.use(cors({
 app.use('/images', express.static(path.join(__dirname, 'images'))); // Static image files serve kar rahe hain
 
 // === User Registration ===
-app.post('/register', async (req, res) => {
+app.post('/login', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  console.log("Login request received:", req.body); // Debug log
+
   try {
-    const { name, email, password } = req.body; // Request body se user details le rahe hain
+    if (!email) {
+      return res.status(400).send({ message: "Email is required" });
+    }
 
-    // Check kar rahe hain ki email already registered hai ya nahi
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(200).send(existingUser); // Agar user already hai toh response bhej rahe hain
+    if (password) {
+      // Manual login
+      const user = await User.findOne({ email, password }).select("-password");
+      if (user) {
+        return res.status(200).send(user);
+      } else {
+        return res.status(401).send({ message: "Invalid email or password" });
+      }
+    } else {
+      // Google login (password not required)
+      let googleUser = await User.findOne({ email }).select("-password");
 
-    // New user create kar rahe hain aur database mein save kar rahe hain
-    const user = new User({ name, email, password: password || null });
-    const result = await user.save(); // User ko save kar rahe hain
-    res.status(201).send(result); // User save hone ke baad response bhej rahe hain
+      if (!googleUser) {
+        if (!name) {
+          return res.status(400).send({ message: "Name is required for Google sign up" });
+        }
+
+        const newUser = new User({ name, email, password: null });
+        googleUser = await newUser.save();
+      }
+
+      return res.status(200).send(googleUser);
+    }
+
   } catch (err) {
-    console.error('Registration error:', err); // Error handle kar rahe hain
-    res.status(500).send({ message: 'Server error during registration' }); // Agar error aaye toh server error bhej rahe hain
+    console.error("❌ Login Error:", err);
+    res.status(500).send({ message: "Server error during login", error: err.message });
   }
 });
+
 
 // === User Login (Manual + Google) ===
 app.post('/login', async (req, res) => {

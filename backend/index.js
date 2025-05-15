@@ -10,7 +10,7 @@ const User = require('./db/User');
 const Product = require('./db/Product');
 const Order = require('./db/Order');
 const sendOrderConfirmationEmail = require('./db/emailService');
-const  sendContactEmail  = require('./db/sendOrderConfirmationEmail');
+const sendContactEmail = require('./db/emailService');
 
 // Express application ko initialize kar rahe hain
 const app = express();

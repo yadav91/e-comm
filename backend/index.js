@@ -43,26 +43,41 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// === User Login ===
+// === User Login (Manual + Google) ===
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body; // Request body se email aur password le rahe hain
+  const { name, email, password } = req.body;
+
   try {
     if (email && password) {
-      // Agar email aur password dono diye gaye hain, toh user ko authenticate kar rahe hain
-      const user = await User.findOne({ email, password }).select("-password"); // Password ko select nahi kar rahe
-      return user ? res.send(user) : res.status(401).send({ message: "No user found" }); // Agar user milta hai toh data bhej rahe hain
+      // Manual login: email + password
+      const user = await User.findOne({ email, password }).select("-password");
+      return user
+        ? res.send(user)
+        : res.status(401).send({ message: "No user found" });
     }
 
     if (email && !password) {
-      // Agar sirf email diya hai, toh google login user ko fetch kar rahe hain
-      const googleUser = await User.findOne({ email }).select("-password");
-      return googleUser ? res.send(googleUser) : res.status(401).send({ message: "Google user not registered" });
+      // Google Login
+      let googleUser = await User.findOne({ email }).select("-password");
+
+      if (!googleUser) {
+        // Google user not found, create new one
+        const newUser = new User({
+          name: name || "Google User", // fallback if name is not provided
+          email,
+          password: null
+        });
+        googleUser = await newUser.save();
+      }
+
+      return res.send(googleUser);
     }
 
-    res.status(400).send({ message: "Invalid request" }); // Agar koi invalid request aayi ho toh error bhej rahe hain
+    res.status(400).send({ message: "Invalid request" });
+
   } catch (err) {
-    console.error("Login Error:", err); // Error handle kar rahe hain
-    res.status(500).send({ message: "Server error during login" }); // Agar error aaye toh server error bhej rahe hain
+    console.error("Login Error:", err);
+    res.status(500).send({ message: "Server error during login" });
   }
 });
 

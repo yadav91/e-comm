@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import jwtDecode from 'jwt-decode';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 
 const UserLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert('Please fill all fields');
+      alert("Please fill all fields");
       return;
     }
 
     try {
-      const response = await fetch('https://e-comm-backend-y3z6.onrender.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://e-comm-backend-y3z6.onrender.com/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const result = await response.json();
 
@@ -30,15 +33,15 @@ const UserLogin = () => {
           picture: result.picture || "",
         };
 
-        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem("user", JSON.stringify(userData));
         window.dispatchEvent(new Event("userChanged"));
-        navigate('/');
+        navigate("/");
       } else {
-        alert('Invalid login credentials');
+        alert("Invalid login credentials");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      alert('Login failed. Try again.');
+      console.error("Login error:", error);
+      alert("Login failed. Try again.");
     }
   };
 
@@ -58,7 +61,9 @@ const UserLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">User Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          User Login
+        </h2>
 
         <input
           type="email"
@@ -95,7 +100,7 @@ const UserLogin = () => {
         />
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          New user?{' '}
+          New user?{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
             Register here
           </Link>

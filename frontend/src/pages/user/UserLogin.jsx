@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import jwtDecode from 'jwt-decode';
 
 const UserLogin = () => {
   const [email, setEmail] = useState('');
@@ -25,11 +27,11 @@ const UserLogin = () => {
         const userData = {
           name: result.name,
           email: result.email,
-          picture: result.picture || "", // Optional picture
+          picture: result.picture || "",
         };
 
         localStorage.setItem('user', JSON.stringify(userData));
-        window.dispatchEvent(new Event("userChanged")); // Notify Nav
+        window.dispatchEvent(new Event("userChanged"));
         navigate('/');
       } else {
         alert('Invalid login credentials');
@@ -38,6 +40,19 @@ const UserLogin = () => {
       console.error('Login error:', error);
       alert('Login failed. Try again.');
     }
+  };
+
+  const handleGoogleLoginSuccess = (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential);
+    const userData = {
+      name: decoded.name,
+      email: decoded.email,
+      picture: decoded.picture,
+    };
+
+    localStorage.setItem("user", JSON.stringify(userData));
+    window.dispatchEvent(new Event("userChanged"));
+    navigate("/");
   };
 
   return (
@@ -67,6 +82,17 @@ const UserLogin = () => {
         >
           Login
         </button>
+
+        <div className="my-4 text-center text-gray-500">OR</div>
+
+        <GoogleLogin
+          onSuccess={handleGoogleLoginSuccess}
+          onError={() => console.log("Google Login Failed")}
+          shape="pill"
+          theme="filled_blue"
+          size="medium"
+          text="signin_with"
+        />
 
         <p className="mt-4 text-center text-sm text-gray-600">
           New user?{' '}

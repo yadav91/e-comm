@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+
 import jwtDecode from "jwt-decode";
 import { Menu, X } from "lucide-react";
 
@@ -91,14 +91,6 @@ const Nav = () => {
             </div>
           ) : (
             <>
-              <GoogleLogin
-                onSuccess={handleLoginSuccess}
-                onError={() => console.log("Google Login Failed")}
-                shape="pill"
-                theme="filled_blue"
-                size="medium"
-                text="signin_with"
-              />
               <Link
                 to="/login"
                 className="text-gray-700 hover:text-blue-600 text-sm"
